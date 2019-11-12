@@ -1,7 +1,8 @@
 # Simple pong game
 
 import turtle
-
+import winsound
+import sys
 # The window of the game
 win = turtle.Screen()
 win.title("Pong made by Aichi")
@@ -10,6 +11,11 @@ win.setup(width=800, height=600)
 
 # Stops the window from refreshing
 win.tracer(0)
+
+# Score
+scoreA = 0
+scoreB = 0
+
 
 # Paddle A
 paddleA = turtle.Turtle()
@@ -37,8 +43,19 @@ ball.shape("square")
 ball.color("white")
 ball.penup()
 ball.goto(0, 0)
-ball.dx = 0.5
-ball.dy = -0.5
+ball.dx = 0.3
+ball.dy = 0.3
+
+
+# Pen
+pen = turtle.Turtle()
+pen.speed(0)
+pen.color("white")
+pen.penup()
+pen.hideturtle()
+pen.goto(0, 260)
+pen.write("Player A : 0   Player B: 0", align="center",
+          font=("Courier", 24, "normal"))
 
 
 def paddleAUp():
@@ -90,6 +107,7 @@ while True:
     if ball.ycor() > 290:
         ball.sety(290)
         ball.dy *= -1
+        # winsound.PlaySound('bounce.wav',winsound.SND_FILENAME)
 
     if ball.ycor() < -290:
         ball.sety(-290)
@@ -98,7 +116,26 @@ while True:
     if ball.xcor() > 390:
         ball.goto(0, 0)
         ball.dx *= -1
+        scoreA += 1
+        pen.clear()
+        pen.write("Player A : {}   Player B: {}".format(scoreA, scoreB), align="center",
+                  font=("Courier", 24, "normal"))
 
     if ball.xcor() < - 390:
         ball.goto(0, 0)
         ball.dx *= -1
+        scoreB += 1
+        pen.clear()
+        pen.write("Player A : {}   Player B: {}".format(scoreA, scoreB), align="center",
+                  font=("Courier", 24, "normal"))
+
+    # Paddle and ball collision
+    if ball.xcor() > 340 and ball.xcor() < 350 and (ball.ycor() < paddleB.ycor() + 50 and ball.ycor() > paddleB.ycor() - 50):
+        ball.setx(340)
+        ball.dx *= -1
+
+    if ball.xcor() < -340 and ball.xcor() > -350 and (ball.ycor() < paddleA.ycor() + 50 and ball.ycor() > paddleA.ycor() - 50):
+        ball.setx(-340)
+        ball.dx *= -1
+
+    # win.update()
